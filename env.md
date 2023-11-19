@@ -18,8 +18,15 @@
 
 #### KAFKA_CFG_LISTENERS=BROKER://:9092,CONTROLLER://:9093
 
-- This configures the listeners for the Kafka broker. It's defining two listeners: BROKER on port 9092 and CONTROLLER on port 9093.
+- Purpose: Specifies on which interfaces and ports the Kafka brokers will listen for incoming connections.
+- Format: BROKER://:9092,CONTROLLER://:9093,CONNECTIONS_FROM_HOST://:19094
+- Here, the absence of a domain or hostname (just :) means Kafka will bind these listeners to all available network interfaces on the host machine. It's listening on ports 9092, 9093, and 19094 on any network interface the server has.
 
+#### KAFKA_CFG_ADVERTISED_LISTENERS
+- Purpose: Tells clients how they can reach the Kafka brokers. This is what Kafka uses to advertise itself to clients.
+- Format: BROKER://kafka3:9092,CONNECTIONS_FROM_HOST://localhost:19094
+- BROKER://kafka3:9092 is likely for internal clients (within the same network, such as a Docker network) to connect to the Kafka broker using the hostname kafka3 on port 9092.
+- CONNECTIONS_FROM_HOST://localhost:19094 is for external clients. This configuration is crucial when Kafka is running inside a Docker container, and you want to connect to it from the host machine on which Docker is running. The localhost here refers to the Docker host for external connections.
 
 #### KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,BROKER:PLAINTEXT
 
